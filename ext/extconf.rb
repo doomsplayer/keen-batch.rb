@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'mkmf'
 include FileUtils
 
 %x(curl -sf https://raw.githubusercontent.com/doomsplayer/multirust/master/blastoff.sh | sh -s -- --yes)
@@ -6,3 +7,5 @@ include FileUtils
 Dir.chdir("keen_native")
 %x(cargo build --release)
 mv("target/release/libkeen.so", "../../lib/")
+Dir.chdir("../")
+create_makefile(".")
