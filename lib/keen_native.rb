@@ -2,7 +2,7 @@ require "keen_native/version"
 require 'eventmachine'
 require 'fiddle'
 require 'time'
-
+require 'keen_native_bin'
 
 class KeenNative
   libkeen = Fiddle.dlopen(File.dirname(__FILE__) + '/libkeen.so')
