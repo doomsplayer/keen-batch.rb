@@ -7,5 +7,6 @@ include FileUtils
 Dir.chdir("keen_native")
 %x(cargo build --release)
 mv("target/release/libkeen.so", "../../lib/")
+mv("target/release/keen", "../../lib/keen")
 Dir.chdir("../")
 create_makefile(".")

@@ -4,7 +4,6 @@ require 'fiddle'
 require 'time'
 
 
-
 class KeenNative
   libkeen = Fiddle.dlopen(File.dirname(__FILE__) + '/libkeen.so')
   @@new_options = Fiddle::Function.new(
@@ -71,7 +70,6 @@ class KeenNative
       block.call(result)
     end
   end
-  
 
   def set_redis(redis_conn)
     if redis_conn.class != String
