@@ -18,18 +18,18 @@ class KeenNativeBin
   def get_data
     appendix = ""
     if not @redis.nil?
-      appendix << "-r #{@redis}"
+      appendix << " -r '#{@redis}'"
     end
 
     if @aggregate
-      appendix << "-a"
+      appendix << " -a"
     end
 
     if @debug
-      appendix << "-d"
+      appendix << " -d"
     end
 
-    cmd = "./keen #{@url} #{@pid} #{@time} "
+    cmd = "#{File.dirname(__FILE__)}/keen '#{@url}' '#{@pid}' '#{@time}'"
     cmd << appendix
     result = %x[ #{cmd} ]
     result
