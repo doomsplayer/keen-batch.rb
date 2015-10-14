@@ -11,7 +11,10 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def cache_with_field(pfrom, pto, field, from, to)
-    result = @@cache_with_field.call(pfrom, pto, field, from, to)
+    if from.class != DateTime && to.class != DateTime
+      raise "time must be in form datetime"
+    end
+    result = @@cache_with_field.call(pfrom.to_i, pto.to_i, field, from, to)
     str = result.to_s
     dtor_str(result)
     str
@@ -23,7 +26,10 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def get_with_field(pid, pfrom, pto, field, from, to)
-    result = @@get_with_field.call(pib, pfrom, pto, field, from, to)
+    if from.class != DateTime && to.class != DateTime
+      raise "time must be in form datetime"
+    end
+    result = @@get_with_field.call(pid.to_i, pfrom.to_i, pto.to_i, field, from, to)
     str = result.to_s
     dtor_str(result)
     str
@@ -35,7 +41,10 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def cache_unique_page_view(pfrom, pto, from, to)
-    result = @@cache_unique_page_view.call(pfrom, pto, from, to)
+    if from.class != DateTime && to.class != DateTime
+      raise "time must be in form datetime"
+    end
+    result = @@cache_unique_page_view.call(pfrom.to_i, pto.to_i, from, to)
     str = result.to_s
     dtor_str(result)
     str
@@ -47,7 +56,10 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def get_unique_page_view(pid, pfrom, pto, from, to)
-    result = @@get_unique_page_view.call(pid, pfrom, pto, from, to)
+    if from.class != DateTime && to.class != DateTime
+      raise "time must be in form datetime"
+    end
+    result = @@get_unique_page_view.call(pid.to_i, pfrom.to_i, pto.to_i, from, to)
     str = result.to_s
     dtor_str(result)
     str
@@ -59,6 +71,9 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def cache_total_page_view(from, to)
+    if from.class != DateTime && to.class != DateTime
+      raise "time must be in form datetime"
+    end
     result = @@cache_total_page_view.call(from, to)
     str = result.to_s
     dtor_str(result)
@@ -71,7 +86,10 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def get_total_page_view(pid, from, to)
-    result = @@get_total_page_view.call(pid, from, to)
+    if from.class != DateTime && to.class != DateTime
+      raise "time must be in form datetime"
+    end
+    result = @@get_total_page_view.call(pid.to_i, from, to)
     str = result.to_s
     dtor_str(result)
     str
@@ -83,6 +101,9 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def cache_total_unique_page_view(from, to)
+    if from.class != DateTime && to.class != DateTime
+      raise "time must be in form datetime"
+    end
     result = @@cache_total_unique_page_view.call(from, to)
     str = result.to_s
     dtor_str(result)
@@ -95,7 +116,10 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def get_total_unique_page_view(pid, from, to)
-    result = @@get_total_unique_page_view.call(pid, from, to)
+    if from.class != DateTime && to.class != DateTime
+      raise "time must be in form datetime"
+    end
+    result = @@get_total_unique_page_view.call(pid.to_i, from, to)
     str = result.to_s
     dtor_str(result)
     str
