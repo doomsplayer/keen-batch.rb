@@ -1,3 +1,3 @@
-class KeenNative
-  VERSION = "0.1.0"
+module KeenNative
+  VERSION = "0.2.0"
 end

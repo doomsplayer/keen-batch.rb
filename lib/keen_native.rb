@@ -2,91 +2,111 @@ require "keen_native/version"
 require 'eventmachine'
 require 'fiddle'
 require 'time'
-require 'keen_native_bin'
 
-class KeenNative
-  libkeen = Fiddle.dlopen(File.dirname(__FILE__) + '/libkeen.so')
-  @@new_options = Fiddle::Function.new(
-    libkeen['new_options'],
-    [Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP],
+module KeenNative
+  libkeen = Fiddle.dlopen(File.dirname(__FILE__) + '/libkeen_native.so')
+  @@cache_with_field = Fiddle::Function.new(
+    libkeen['cache_with_field_c'],
+    [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
     Fiddle::TYPE_VOIDP
   )
-  @@get_data = Fiddle::Function.new(
-    libkeen['get_data'],
-    [Fiddle::TYPE_VOIDP],
+  def cache_with_field(pfrom, pto, field, from, to)
+    result = @@cache_with_field.call(pfrom, pto, field, from, to)
+    str = result.to_s
+    dtor_str(result)
+    str
+  end
+
+  @@get_with_field = Fiddle::Function.new(
+    libkeen['get_with_field_c'],
+    [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
     Fiddle::TYPE_VOIDP
   )
-  @@set_redis = Fiddle::Function.new(
-    libkeen['set_redis'],
+  def get_with_field(pid, pfrom, pto, field, from, to)
+    result = @@get_with_field.call(pib, pfrom, pto, field, from, to)
+    str = result.to_s
+    dtor_str(result)
+    str
+  end
+
+  @@cache_unique_page_view = Fiddle::Function.new(
+    libkeen['cache_unique_page_view_c'],
+    [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
+    Fiddle::TYPE_VOIDP
+  )
+  def cache_unique_page_view(pfrom, pto, from, to)
+    result = @@cache_unique_page_view.call(pfrom, pto, from, to)
+    str = result.to_s
+    dtor_str(result)
+    str
+  end
+
+  @@get_unique_page_view = Fiddle::Function.new(
+    libkeen['get_unique_page_view_c'],
+    [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
+    Fiddle::TYPE_VOIDP
+  )
+  def get_unique_page_view(pid, pfrom, pto, from, to)
+    result = @@get_unique_page_view.call(pid, pfrom, pto, from, to)
+    str = result.to_s
+    dtor_str(result)
+    str
+  end
+
+  @@cache_total_page_view = Fiddle::Function.new(
+    libkeen['cache_total_page_view_c'],
     [Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
-    Fiddle::TYPE_VOID
+    Fiddle::TYPE_VOIDP
   )
-  @@set_aggregate = Fiddle::Function.new(
-    libkeen['set_aggregate'],
-    [Fiddle::TYPE_VOIDP],
-    Fiddle::TYPE_VOID
+  def cache_total_page_view(from, to)
+    result = @@cache_total_page_view.call(from, to)
+    str = result.to_s
+    dtor_str(result)
+    str
+  end
+
+  @@get_total_page_view = Fiddle::Function.new(
+    libkeen['get_total_page_view_c'],
+    [Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
+    Fiddle::TYPE_VOIDP
   )
-  @@set_debug = Fiddle::Function.new(
-    libkeen['set_debug'],
-    [Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT],
-    Fiddle::TYPE_VOID
+  def get_total_page_view(pid, from, to)
+    result = @@get_total_page_view.call(pid, from, to)
+    str = result.to_s
+    dtor_str(result)
+    str
+  end
+
+  @@cache_total_unique_page_view = Fiddle::Function.new(
+    libkeen['cache_total_unique_page_view_c'],
+    [Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
+    Fiddle::TYPE_VOIDP
   )
+  def cache_total_unique_page_view(from, to)
+    result = @@cache_total_unique_page_view.call(from, to)
+    str = result.to_s
+    dtor_str(result)
+    str
+  end
+
+  @@get_total_unique_page_view = Fiddle::Function.new(
+    libkeen['get_total_unique_page_view_c'],
+    [Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
+    Fiddle::TYPE_VOIDP
+  )
+  def get_total_unique_page_view(pid, from, to)
+    result = @@get_total_unique_page_view.call(pid, from, to)
+    str = result.to_s
+    dtor_str(result)
+    str
+  end
+
   @@dealloc_str = Fiddle::Function.new(
     libkeen['dealloc_str'],
     [Fiddle::TYPE_VOIDP],
     Fiddle::TYPE_VOID
   )
 
-  def initialize(url, pid, from_time)
-    if url.class != String
-      raise "connection must be string"
-    end
-    if from_time.class != DateTime
-      raise "from_time must be datetime"
-    end
-
-    @options = @@new_options.call(url, pid.to_i, from_time.iso8601)
-  end
-
-  def get_data
-    if @options.nil?
-      raise "get_data can only be called once"
-    end
-    str = @@get_data.call(@options)
-    @options = nil
-
-    result = str.to_s
-    self.class.dtor_str(str)
-    result
-  end
-
-  def get_data_async(&block)
-    if @options.nil?
-      raise "get_data can only be called once"
-    end
-
-    EM.schedule do
-      result = get_data
-      block.call(result)
-    end
-  end
-
-  def set_redis(redis_conn)
-    if redis_conn.class != String
-      raise "connection must be string"
-    end
-    @@set_redis.call(@options, redis_conn)
-    self
-  end
-
-  def set_aggregate
-    @@set_aggregate.call(@options)
-  end
-
-  def set_debug
-    @@set_debug.call(@options, 1)
-    self
-  end
   private
   def self.dtor_str(str)
     @@dealloc_str.call(str)

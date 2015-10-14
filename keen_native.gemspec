@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Wu Young"]
   spec.email         = ["doomsplayer@gmail.com"]
 
-  spec.summary       = "native library for optimizing keen io delay"
-  spec.description   = "native library for optimizing keen io delay"
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "native library for optimizing keen io delay for strikingly"
+  spec.description   = "written in rust"
+  spec.homepage      = "http://github.com/doomsplayer/keen_native_gem.git"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or

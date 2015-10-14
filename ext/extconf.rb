@@ -8,7 +8,6 @@ print %x(echo rustc -v), "\n"
 %x(git clone https://github.com/doomsplayer/keen_native)
 Dir.chdir("keen_native")
 print %x(cargo build --release), "\n"
-mv("target/release/libkeen.so", "../../lib/")
-mv("target/release/keen", "../../lib/keen")
+mv("target/release/libkeen_native.so", "../../lib/")
 Dir.chdir("../")
 create_makefile(".")
