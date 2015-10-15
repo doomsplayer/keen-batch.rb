@@ -1,0 +1,3 @@
+[submodule "ext/keen_native"]
+	path = ext/keen_native
+	url = git@github.com:doomsplayer/keen_native
