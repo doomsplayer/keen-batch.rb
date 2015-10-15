@@ -5,93 +5,63 @@ require 'time'
 
 module KeenNative
   libkeen = Fiddle.dlopen(File.dirname(__FILE__) + '/libkeen_native.so')
-  @@cache_with_field = Fiddle::Function.new(
-    libkeen['cache_with_field_c'],
+  @@cache_with_field_range = Fiddle::Function.new(
+    libkeen['cache_with_field_range_c'],
     [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT],
     Fiddle::TYPE_VOIDP
   )
-  def cache_with_field(pfrom, pto, field, from, to, unique)
+  def self.cache_with_field_range(pfrom, pto, field, from, to, unique=false)
     if from.class != DateTime && to.class != DateTime
       raise "time must be in form datetime"
     end
-    result = @@cache_with_field.call(pfrom.to_i, pto.to_i, field, from, to, unique)
+    result = @@cache_with_field_range.call(pfrom.to_i, pto.to_i, field, from.iso8601, to.iso8601, unique ? 1 : 0)
     str = result.to_s
-    dtor_str(result)
+    self.dtor_str(result)
     str
   end
 
-  @@get_with_field = Fiddle::Function.new(
-    libkeen['get_with_field_c'],
+  @@get_with_field_range = Fiddle::Function.new(
+    libkeen['get_with_field_range_c'],
     [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT],
     Fiddle::TYPE_VOIDP
   )
-  def get_with_field(pid, pfrom, pto, field, from, to, unique)
+  def self.get_with_field_range(pid, pfrom, pto, field, from, to, unique=false)
     if from.class != DateTime && to.class != DateTime
       raise "time must be in form datetime"
     end
-    result = @@get_with_field.call(pid.to_i, pfrom.to_i, pto.to_i, field, from, to, unique)
+    result = @@get_with_field_range.call(pid.to_i, pfrom.to_i, pto.to_i, field, from.iso8601, to.iso8601, unique ? 1 : 0)
     str = result.to_s
-    dtor_str(result)
+    self.dtor_str(result)
     str
   end
 
-  @@cache_page_view = Fiddle::Function.new(
-    libkeen['cache_page_view_c'],
-    [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT],
+  @@cache_page_view_range = Fiddle::Function.new(
+    libkeen['cache_page_view_range_c'],
+    [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP],
     Fiddle::TYPE_VOIDP
   )
-  def cache_unique_page_view(pfrom, pto, from, to, unique)
+  def self.cache_page_view_range(pfrom, pto, from, to, unique=false, interval="")
     if from.class != DateTime && to.class != DateTime
       raise "time must be in form datetime"
     end
-    result = @@cache_unique_page_view.call(pfrom.to_i, pto.to_i, from, to, unique)
+    result = @@cache_page_view_range.call(pfrom.to_i, pto.to_i, from.iso8601, to.iso8601, unique ? 1 : 0, interval)
     str = result.to_s
-    dtor_str(result)
+    self.dtor_str(result)
     str
   end
 
-  @@get_page_view = Fiddle::Function.new(
-    libkeen['get_page_view_c'],
-    [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT],
+  @@get_page_view_range = Fiddle::Function.new(
+    libkeen['get_page_view_range_c'],
+    [Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP],
     Fiddle::TYPE_VOIDP
   )
-  def get_unique_page_view(pid, pfrom, pto, from, to, unique)
+  def self.get_page_view_range(pid, pfrom, pto, from, to, unique=false, interval="")
     if from.class != DateTime && to.class != DateTime
       raise "time must be in form datetime"
     end
-    result = @@get_unique_page_view.call(pid.to_i, pfrom.to_i, pto.to_i, from, to, unique)
+    result = @@get_page_view_range.call(pid.to_i, pfrom.to_i, pto.to_i, from.iso8601, to.iso8601, unique ? 1 : 0, interval)
     str = result.to_s
-    dtor_str(result)
-    str
-  end
-
-  @@cache_total_page_view = Fiddle::Function.new(
-    libkeen['cache_total_page_view_c'],
-    [Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT],
-    Fiddle::TYPE_VOIDP
-  )
-  def cache_total_page_view(from, to, unique)
-    if from.class != DateTime && to.class != DateTime
-      raise "time must be in form datetime"
-    end
-    result = @@cache_total_page_view.call(from, to, unique)
-    str = result.to_s
-    dtor_str(result)
-    str
-  end
-
-  @@get_total_page_view = Fiddle::Function.new(
-    libkeen['get_total_page_view_c'],
-    [Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT],
-    Fiddle::TYPE_VOIDP
-  )
-  def get_total_page_view(pid, from, to, unique)
-    if from.class != DateTime && to.class != DateTime
-      raise "time must be in form datetime"
-    end
-    result = @@get_total_page_view.call(pid.to_i, from, to, unique)
-    str = result.to_s
-    dtor_str(result)
+    self.dtor_str(result)
     str
   end
 
