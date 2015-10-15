@@ -11,9 +11,8 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def self.cache_with_field_range(pfrom, pto, field, from, to, unique=false)
-    if from.class != DateTime && to.class != DateTime
-      raise "time must be in form datetime"
-    end
+    from = DateTime.parse(from.to_s)
+    to = DateTime.parse(to.to_s)
     result = @@cache_with_field_range.call(pfrom.to_i, pto.to_i, field, from.iso8601, to.iso8601, unique ? 1 : 0)
     str = result.to_s
     self.dtor_str(result)
@@ -26,9 +25,8 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def self.get_with_field_range(pid, pfrom, pto, field, from, to, unique=false)
-    if from.class != DateTime && to.class != DateTime
-      raise "time must be in form datetime"
-    end
+    from = DateTime.parse(from.to_s)
+    to = DateTime.parse(to.to_s)
     result = @@get_with_field_range.call(pid.to_i, pfrom.to_i, pto.to_i, field, from.iso8601, to.iso8601, unique ? 1 : 0)
     str = result.to_s
     self.dtor_str(result)
@@ -41,10 +39,9 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def self.cache_page_view_range(pfrom, pto, from, to, unique=false, interval="")
-    if from.class != DateTime && to.class != DateTime
-      raise "time must be in form datetime"
-    end
-    result = @@cache_page_view_range.call(pfrom.to_i, pto.to_i, from.iso8601, to.iso8601, unique ? 1 : 0, interval)
+    from = DateTime.parse(from.to_s)
+    to = DateTime.parse(to.to_s)
+    result = @@cache_page_view_range.call(pfrom.to_i, pto.to_i, from.iso8601, to.iso8601, unique ? 1 : 0, interval.to_s)
     str = result.to_s
     self.dtor_str(result)
     str
@@ -56,10 +53,9 @@ module KeenNative
     Fiddle::TYPE_VOIDP
   )
   def self.get_page_view_range(pid, pfrom, pto, from, to, unique=false, interval="")
-    if from.class != DateTime && to.class != DateTime
-      raise "time must be in form datetime"
-    end
-    result = @@get_page_view_range.call(pid.to_i, pfrom.to_i, pto.to_i, from.iso8601, to.iso8601, unique ? 1 : 0, interval)
+    from = DateTime.parse(from.to_s)
+    to = DateTime.parse(to.to_s)
+    result = @@get_page_view_range.call(pid.to_i, pfrom.to_i, pto.to_i, from.iso8601, to.iso8601, unique ? 1 : 0, interval.to_s)
     str = result.to_s
     self.dtor_str(result)
     str
