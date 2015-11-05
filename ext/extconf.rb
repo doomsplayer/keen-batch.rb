@@ -3,7 +3,7 @@ require 'mkmf'
 include FileUtils
 
 %x(curl -sf https://raw.githubusercontent.com/doomsplayer/multirust/master/blastoff.sh | sh -s -- --yes)
-print %x(multirust default beta), "\n"
+print %x(multirust override beta), "\n"
 print %x(echo rustc -v), "\n"
 Dir.chdir("keen_native")
 print %x(cargo build --release), "\n"
