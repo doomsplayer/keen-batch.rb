@@ -7,7 +7,7 @@ module KeenNative
       @abandoned = false
     end
     def self.from_redis(url, key, type)
-      raise TypeError.new "data type must be ResultType" if !(type.class < ResultType)
+      raise TypeError.new "data type must be ResultType" if !(type < Result::ResultType)
       key = key.to_s
       url = url.to_s
       result = KeenIoBooster.from_redis(url, key, type.id)
@@ -19,7 +19,7 @@ module KeenNative
         raise "object abandoned"
       end
       
-      raise TypeError.new "data type must be ResultType" if !(type.class < ResultType)
+      raise TypeError.new "data type must be ResultType" if !(type < Result::ResultType)
       result = KeenIoBooster.accumulate(@result, type.id)
       @abandoned = true
       raise "[keen_native] accumulate error" if result.null?
@@ -33,7 +33,7 @@ module KeenNative
       
       key = key.to_s
       value = value.to_s
-      raise TypeError.new "data type must be ResultType" if !(type.class < ResultType)
+      raise TypeError.new "data type must be ResultType" if !(type < Result::ResultType)
       result = KeenIoBooster.select(@result, key, value, type.id)
       @abandoned = true
       raise "[keen_native] select error" if result.null?
@@ -47,7 +47,7 @@ module KeenNative
       
       key = key.to_s
       raise TypeError.new "expire must be Fixnum" if expire.class != Fixnum
-      raise "[keen_native] set to redis fail" if !KeenIoBooster.to_redis(@result, key, expire)
+      raise "[keen_native] set to redis fail" if KeenIoBooster.to_redis(@result, key, expire).zero?
     end
     def data
       if @abandoned

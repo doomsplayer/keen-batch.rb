@@ -1,6 +1,7 @@
 require "keen_native/version"
-require "keen_native/ffi"
 require 'time'
+require "ffi"
+require "keen_native/ffi"
 require "keen_native/types"
 require "keen_native/result"
 require "keen_native/query"

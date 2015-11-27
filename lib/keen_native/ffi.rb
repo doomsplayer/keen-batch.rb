@@ -1,7 +1,6 @@
-require 'ffi'
 module KeenIoBooster
   extend FFI::Library
-  ffi_lib './libkeenio_booster.so'
+  ffi_lib File.expand_path('../../libkeenio_booster.so', __FILE__)
   attach_function :new, [ :string, :string ], :pointer
   attach_function :set_redis, [:pointer, :string], :int
   attach_function :set_timeout, [:pointer, :int], :int
@@ -35,5 +34,5 @@ module KeenIoBooster
   attach_function :result_data, [:pointer], :pointer # this will make result object invalid
   
   attach_function :from_redis, [:string, :string, :int], :pointer
-  attach_function :dealloc_str, [:string], :void
+  attach_function :dealloc_str, [:pointer], :void
 end
