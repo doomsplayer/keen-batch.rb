@@ -75,7 +75,7 @@ module KeenNative
     class FilterType
       def initialize(l,r)
         @l = l.to_s
-        @r = r
+        @r = r.to_s
       end
       def l
         @l
