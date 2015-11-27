@@ -54,9 +54,23 @@ module KeenNative
         2
       end
     end
-    
-    
+    class Weekly < IntervalType
+      def self.id
+        3
+      end
+    end
+    class Monthly < IntervalType
+      def self.id
+        4
+      end
+    end
+    class Yearly < IntervalType
+      def self.id
+        5
+      end
+    end
   end
+
   module Filter
     class FilterType
       def initialize(l,r)
@@ -103,7 +117,13 @@ module KeenNative
         4
       end
     end
+    class In < FilterType
+      def id
+        5
+      end
+    end
   end
+
   module Metrics
     class MetricsType
       def id
@@ -133,7 +153,5 @@ module KeenNative
         @target
       end
     end
-    
-  end  
-  
+  end
 end
