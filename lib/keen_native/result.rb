@@ -58,7 +58,7 @@ module KeenNative
       @abandoned = true
       raise "[keen_native] get data from result error" if d.null?
       nd = String.new(d.read_string)
-      KeenIoBooster.dealloc_str(d)
+      KeenIoBooster.dealloc_str(d) #or it will double free, dunno why
       nd
     end
   end

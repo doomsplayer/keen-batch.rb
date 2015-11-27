@@ -75,7 +75,7 @@ module KeenNative
     class FilterType
       def initialize(l,r)
         @l = l.to_s
-        @r = r.to_s
+        @r = r
       end
       def l
         @l
@@ -139,7 +139,7 @@ module KeenNative
         0
       end
     end
-    
+
     class CountUnique < MetricsType
       def initialize(target)
         target = target.to_s
