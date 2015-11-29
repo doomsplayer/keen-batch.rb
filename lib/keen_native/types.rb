@@ -77,10 +77,10 @@ module KeenNative
         @l = l.to_s
         @r = r.to_s
       end
-      def l
+      def lhs
         @l
       end
-      def r
+      def rhs
         @r
       end
       def id

@@ -8,34 +8,32 @@ module KeenNative
       @interval = false
     end
     def group_by(group)
-      if @abandoned
-        raise "object abandoned"
-      end
+      raise "object abandoned" if @abandoned
 
       group = group.to_s
       raise "[keen_native] add group by error" if KeenIoBooster.group_by(@query, group).zero?
       @groupby = true
+
+      self
     end
     def filter(f)
-      if @abandoned
-        raise "object abandoned"
-      end
+      raise "object abandoned" if @abandoned
 
       raise TypeError.new "filter must be FilterType" if !(f.class < Filter::FilterType)
       raise "[keen_native] add filter error" if KeenIoBooster.filter(@query, f.id, f.l, f.r).zero?
+
+      self
     end
     def interval(i)
-      if @abandoned
-        raise "object abandoned"
-      end
+      raise "object abandoned" if @abandoned
       raise TypeError.new "interval must be IntervalType" if !(i < Interval::IntervalType)
       raise "[keen_native] set interval error" if KeenIoBooster.interval(@query, i.id).zero?
       @interval = true
+
+      self
     end
-    def data()
-      if @abandoned
-        raise "object abandoned"
-      end
+    def data
+      raise "object abandoned" if @abandoned
       @abandoned = true
       type = if @interval && @groupby
         Result::DaysItems

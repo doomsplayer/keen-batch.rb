@@ -8,6 +8,9 @@ require "keen_native/query"
 require "keen_native/client"
 
 module KeenNative
+  def self.enable_log
+    KeenIoBooster.enable_log
+  end
 end
 
 
