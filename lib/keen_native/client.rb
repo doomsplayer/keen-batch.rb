@@ -9,13 +9,13 @@ module KeenNative
       @native_client = KeenIoBooster.new(key, project)
       raise "[keen_native] get keen native client error" if @native_client.null?
     end
-    def set_redis(url)
+    def set_redis!(url)
       url = url.to_s
       raise TypeError.new "url must be string" if url.class != String
       raise "[keen_native] set redis error" if KeenIoBooster.set_redis(@native_client, url).zero?
       self
     end
-    def set_timeout(tick)
+    def set_timeout!(tick)
       raise TypeError.new "timeout must be a num" if tick.class != Fixnum
       raise "[keen_native] set_timeout error" if KeenIoBooster.set_timeout(@native_client, tick).zero?
       self

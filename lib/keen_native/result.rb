@@ -13,17 +13,18 @@ module KeenNative
       raise "[keen_native] get data from redis error" if result.null?
       KeenNativeResult.new(result)
     end
-    def accumulate(type)
+    def accumulate!(type)
       raise "object abandoned" if @abandoned
 
       raise TypeError.new "data type must be ResultType" if !(type < Result::ResultType)
       result = KeenIoBooster.accumulate(@result, type.id)
       @abandoned = true
       raise "[keen_native] accumulate error" if result.null?
-
-      KeenNativeResult.new(result)
+      @result = result
+      @abandoned = false
+      self
     end
-    def select(key, value, type)
+    def select!(key, value, type)
       raise "object abandoned" if @abandoned
 
       key = key.to_s
@@ -32,16 +33,20 @@ module KeenNative
       result = KeenIoBooster.select(@result, key, value, type.id)
       @abandoned = true
       raise "[keen_native] select error" if result.null?
-
-      KeenNativeResult.new(result)
+      @result = result
+      @abandoned = false
+      self
     end
-    def range(from, to)
+    def range!(from, to)
       raise "object abandoned" if @abandoned
       raise TypeError.new "from and to must be DateTime" if !(from.class == DateTime || to.class == DateTime)
       result = KeenIoBooster.range(@result, from.rfc3339, to.rfc3339)
       @abandoned = true
       raise "[keen_native] range error" if result.null?
-      KeenNativeResult.new(result)
+
+      @result = result
+      @abandoned = false
+      self
     end
     def to_redis(key, expire)
       raise "object abandoned" if @abandoned
@@ -50,7 +55,7 @@ module KeenNative
       raise TypeError.new "expire must be Fixnum" if expire.class != Fixnum
       raise "[keen_native] set to redis fail" if KeenIoBooster.to_redis(@result, key, expire).zero?
     end
-    def data
+    def data!
       raise "object abandoned" if @abandoned
 
       d = KeenIoBooster.result_data(@result)
@@ -60,7 +65,7 @@ module KeenNative
       KeenIoBooster.dealloc_str(d)
       nd
     end
-    def release
+    def release!
       KeenIoBooster.delete_result(@result)
       @abandoned = true
     end
