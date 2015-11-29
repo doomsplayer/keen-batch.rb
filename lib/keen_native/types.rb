@@ -140,6 +140,11 @@ module KeenNative
         5
       end
     end
+    class Ne < FilterType
+      def id
+        6
+      end
+    end
   end
 
   module Metrics
