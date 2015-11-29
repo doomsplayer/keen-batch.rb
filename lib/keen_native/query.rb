@@ -20,7 +20,7 @@ module KeenNative
       raise "object abandoned" if @abandoned
 
       raise TypeError.new "filter must be FilterType" if !(f.class < Filter::FilterType)
-      raise "[keen_native] add filter error" if KeenIoBooster.filter(@query, f.id, f.l, f.r).zero?
+      raise "[keen_native] add filter error" if KeenIoBooster.filter(@query, f.id, f.lhs, f.rhs).zero?
 
       self
     end
