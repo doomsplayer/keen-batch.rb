@@ -31,6 +31,21 @@ module KeenNative
     end
   end
   module Interval
+    def self.from_str(s)
+      case s
+      when "minutely" then
+        Minutely
+      when "hourly" then
+        Hourly
+      when "daily" then
+        Daily
+      when "monthly" then
+        Monthly
+      when "yearly" then
+        Yearly
+      end
+    end
+
     class IntervalType
       def self.id
         0
@@ -90,6 +105,22 @@ module KeenNative
   end
 
   module Filter
+    def self.from_str(s, l, r)
+      f = case s
+          when 'eq' then
+            Filter::Eq
+          when 'lt' then
+            Filter::Lt
+          when 'gt' then
+            Filter::Gt
+          when 'in' then
+            Filter::In    # TODO: add more operators
+          when 'ne' then
+            Filter::Ne
+          end
+      f.new(l,r)
+    end
+
     class FilterType
       def initialize(l,r)
         @l = l.to_s
