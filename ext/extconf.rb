@@ -1,6 +1,6 @@
 require 'fileutils'
 require 'mkmf'
-require 'rb_config'
+require 'rbconfig'
 include FileUtils
 def os
   host_os = RbConfig::CONFIG['host_os']
