@@ -30,7 +30,7 @@ module KeenIoBooster
     ext = 'dll'
   end
 
-  ffi_lib File.expand_path('../../libkeenio_booster.#{ext}', __FILE__)
+  ffi_lib File.expand_path("../../libkeenio_booster.#{ext}", __FILE__)
   attach_function :new, [ :string, :string ], :pointer
   attach_function :set_redis, [:pointer, :string], :int
   attach_function :set_timeout, [:pointer, :int], :int
