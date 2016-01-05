@@ -18,6 +18,7 @@ end
 
 module KeenIoBooster
   extend FFI::Library
+  ext = ""
   case os
   when :linux
     ext = 'so'
