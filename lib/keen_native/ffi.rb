@@ -1,6 +1,35 @@
+require 'rbconfig'
+
+def os
+  host_os = RbConfig::CONFIG['host_os']
+  case host_os
+    when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+      :windows
+    when /darwin|mac os/
+      :macosx
+    when /linux/
+      :linux
+    when /solaris|bsd/
+      :unix
+    else
+      raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
+    end
+end
+
 module KeenIoBooster
   extend FFI::Library
-  ffi_lib File.expand_path('../../libkeenio_booster.so', __FILE__)
+  case os
+  when :linux
+    ext = 'so'
+  when :unix
+    ext = 'so'
+  when :macosx
+    ext = 'dylib'
+  when :windows
+    ext = 'dll'
+  end
+
+  ffi_lib File.expand_path('../../libkeenio_booster.#{ext}', __FILE__)
   attach_function :new, [ :string, :string ], :pointer
   attach_function :set_redis, [:pointer, :string], :int
   attach_function :set_timeout, [:pointer, :int], :int
