@@ -48,5 +48,8 @@ module KeenNative
       raise "[keen_native] get data error" if result.null?
       KeenNativeResult.new(result)
     end
+    def is_abandoned
+      @abandoned
+    end
   end
 end

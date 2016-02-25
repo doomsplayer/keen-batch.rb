@@ -60,6 +60,7 @@ module KeenNative
 
       d = KeenIoBooster.result_data(@result)
       @abandoned = true
+      @result = nil
       raise "[keen_native] get data from result error" if d.null?
       nd = String.new(d.read_string)
       KeenIoBooster.dealloc_str(d)
@@ -67,7 +68,9 @@ module KeenNative
     end
     def release!
       KeenIoBooster.delete_result(@result)
+      @result = nil
       @abandoned = true
     end
   end
 end
+

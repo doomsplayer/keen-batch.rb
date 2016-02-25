@@ -20,7 +20,6 @@ module KeenNative
       raise "[keen_native] set_timeout error" if KeenIoBooster.set_timeout(@native_client, tick).zero?
       self
     end
-
     def query(metrics, collection, start, to)
       collection = collection.to_s
       raise TypeError, "start must be DateTime" if start.class != DateTime
