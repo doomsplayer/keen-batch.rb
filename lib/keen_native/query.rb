@@ -32,6 +32,11 @@ module KeenNative
 
       self
     end
+    def other(key, value)
+      raise "object abandoned" if @abandoned
+      raise "[keen_native] set other error" if KeenIoBooster.other(@query, key.to_s, value.to_s).zero?
+      self
+    end
     def data!
       raise "object abandoned" if @abandoned
       @abandoned = true

@@ -48,6 +48,8 @@ module KeenIoBooster
   GTE = 4
   attach_function :filter, [:pointer, :int, :string, :string], :int
 
+  attach_function :other, [:pointer, :string, :string], :int
+  
   MINUTELY = 0
   HOURLY = 1
   DAILY = 2
