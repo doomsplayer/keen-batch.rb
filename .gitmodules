@@ -1,3 +1,6 @@
 [submodule "ext/keen_native"]
 	path = ext/keen_native
 	url = https://github.com/doomsplayer/keen_native
+[submodule "ext/keenio-batch"]
+	path = ext/keenio-batch
+	url = https://github.com/doomsplayer/keenio-batch
