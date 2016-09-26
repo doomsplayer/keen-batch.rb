@@ -1,4 +1,4 @@
-module Keen::Batch
+module Keen::Batch::Types
   module Result
     class ResultType
       def self.id

@@ -5,7 +5,7 @@ module Keen::Batch
         t.null?
       end
     end
-    
+
     def group_by(group)
       FFI.check(FFI.group_by(@query, group.to_s)) { |t| t.zero? }
       self

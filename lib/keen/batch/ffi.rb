@@ -1,34 +1,25 @@
 require 'rbconfig'
 
-def os
+def ext
   host_os = RbConfig::CONFIG['host_os']
   case host_os
-    when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
-      :windows
-    when /darwin|mac os/
-      :macosx
-    when /linux/
-      :linux
-    when /solaris|bsd/
-      :unix
-    else
-      raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
-    end
+  when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+    "dll"
+  when /darwin|mac os/
+    "dylib"
+  when /linux/
+    "so"
+  when /solaris|bsd/
+    "so"
+  else
+    raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
+  end
 end
 
 module Keen::Batch::FFI
-  extend FFI::Library
-  ext = ""
-  case os
-  when :linux, :unix
-    ext = 'so'
-  when :macosx
-    ext = 'dylib'
-  when :windows
-    ext = 'dll'
-  end
+  extend ::FFI::Library
 
-  ffi_lib File.expand_path("../../libkeenio_batch.#{ext}", __FILE__)
+  ffi_lib File.expand_path("../../../libkeenio_batch.#{ext}", __FILE__)
   attach_function :new_client, [ :string, :string ], :pointer
   attach_function :set_redis, [:pointer, :string], :int
   attach_function :set_timeout, [:pointer, :int], :int
@@ -74,7 +65,7 @@ module Keen::Batch::FFI
   attach_function :free_client, [:pointer], :void
   attach_function :last_error, [], :pointer
 
-  def check(tg)
+  def self.check(tg)
     rst = yield tg
     if rst
       ptr = FFI.last_error
