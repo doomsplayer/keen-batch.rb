@@ -1,4 +1,4 @@
-module KeenNative
+module Keen::Batch
   module Result
     class ResultType
       def self.id
@@ -30,6 +30,7 @@ module KeenNative
       end
     end
   end
+  
   module Interval
     def self.from_str(s)
       case s

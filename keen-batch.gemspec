@@ -1,18 +1,18 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'keen_native/version'
+require 'keen-batch/version'
 require 'pathname'
 
 Gem::Specification.new do |spec|
-  spec.name          = "keen_native"
-  spec.version       = KeenNative::VERSION
+  spec.name          = "keen-batch"
+  spec.version       = Keen::Batch::VERSION
   spec.authors       = ["Wu Young"]
   spec.email         = ["doomsplayer@gmail.com"]
 
   spec.summary       = "native library for optimizing keen io delay for strikingly"
   spec.description   = "written in rust"
-  spec.homepage      = "http://github.com/doomsplayer/keen_native_gem.git"
+  spec.homepage      = "http://github.com/doomsplayer/keen-batch.rb.git"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or

@@ -16,13 +16,11 @@ def os
     end
 end
 
-module KeenIoBooster
+module Keen::Batch::FFI
   extend FFI::Library
   ext = ""
   case os
-  when :linux
-    ext = 'so'
-  when :unix
+  when :linux, :unix
     ext = 'so'
   when :macosx
     ext = 'dylib'
@@ -30,15 +28,15 @@ module KeenIoBooster
     ext = 'dll'
   end
 
-  ffi_lib File.expand_path("../../libkeenio_booster.#{ext}", __FILE__)
-  attach_function :new, [ :string, :string ], :pointer
+  ffi_lib File.expand_path("../../libkeenio_batch.#{ext}", __FILE__)
+  attach_function :new_client, [ :string, :string ], :pointer
   attach_function :set_redis, [:pointer, :string], :int
   attach_function :set_timeout, [:pointer, :int], :int
 
   COUNT = 0
   COUNT_UNIQUE = 1
   # *keenclient, metric_type, metric_target[nil], collection, starttime, endtime
-  attach_function :query, [:pointer, :int, :string, :string, :string, :string], :pointer
+  attach_function :new_query, [:pointer, :int, :string, :string, :string, :string], :pointer
   attach_function :group_by, [:pointer, :string], :int
 
   EQ = 0
@@ -59,17 +57,32 @@ module KeenIoBooster
   ITEMS = 1
   DAYSPOD = 2
   DAYSITEMS = 4
-  attach_function :data, [:pointer, :int], :pointer # this will make query object invalid
+  attach_function :send_query, [:pointer], :pointer
 
   # three tranformation calculus
   attach_function :accumulate, [:pointer, :int], :pointer # this will make query object invalid
   attach_function :select, [:pointer, :string, :string, :int], :pointer # this will make query object invalid
   attach_function :range, [:pointer, :string, :string], :pointer # this will make query object invalid
   attach_function :to_redis, [:pointer, :string, :int], :int
-  attach_function :result_data, [:pointer], :pointer # this will make result object invalid
+  attach_function :to_string, [:pointer], :pointer # this will make result object invalid
+  
 
   attach_function :from_redis, [:string, :string, :int], :pointer
-  attach_function :dealloc_str, [:pointer], :void
-  attach_function :delete_result, [:pointer], :void
-  attach_function :enable_log, [], :void
+  attach_function :free_string, [:pointer], :void
+  attach_function :free_result, [:pointer], :void
+  attach_function :free_query, [:pointer], :void
+  attach_function :free_client, [:pointer], :void
+  attach_function :last_error, [], :pointer
+
+  def check(tg)
+    rst = yield tg
+    if rst
+      ptr = FFI.last_error
+      excpt = String.new(ptr.read_string)
+      FFI.free_string(ptr)
+      raise excpt
+    else
+      tg
+    end
+  end
 end
