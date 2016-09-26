@@ -13,6 +13,7 @@ module Keen::Batch
       FFI.check(FFI.set_redis(@client, url)) do |t|
         t.zero?
       end
+      self
     end
 
     def set_timeout(tick)
@@ -20,6 +21,7 @@ module Keen::Batch
       FFI.check(FFI.set_timeout(@client, tick)) do |t| 
         t.zero?
       end
+      self
     end
     def query(metrics, collection, start, to)
       collection = collection.to_s
