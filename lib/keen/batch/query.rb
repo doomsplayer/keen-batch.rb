@@ -12,13 +12,13 @@ module Keen::Batch
     end
 
     def filter(f)
-      raise TypeError.new "filter must be FilterType" if !(f.class < Filter::FilterType)
+      raise TypeError.new "filter must be FilterType" if !(f.class < Types::Filter::FilterType)
       FFI.check(FFI.filter(@query, f.id, f.lhs, f.rhs)) { |t| t.zero? }
       self
     end
 
     def interval(i)
-      raise TypeError.new "interval must be IntervalType" if !(i < Interval::IntervalType)
+      raise TypeError.new "interval must be IntervalType" if !(i < Types::Interval::IntervalType)
       FFI.check(FFI.interval(@query, i.id)) { |t| t.zero? }
       self
     end
@@ -29,9 +29,13 @@ module Keen::Batch
     end
 
     def send_query
-      result = FFI.data(@query)
+      result = FFI.send_query(@query)
       FFI.check(result) { |t| t.null? }
       Result.new(result)
+    end
+
+    def free
+      FFI.free_query(@query)
     end
   end
 end

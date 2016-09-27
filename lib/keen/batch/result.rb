@@ -53,6 +53,7 @@ module Keen::Batch
     def to_redis(key, expire)
       raise "object abandoned" if @abandoned
       raise TypeError.new "expire must be Fixnum" if expire.class != Fixnum
+
       FFI.check(FFI.to_redis(@result, key.to_s, expire)) { |t| t.zero? }
     end
 

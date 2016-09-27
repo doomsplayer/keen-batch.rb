@@ -27,10 +27,10 @@ module Keen::Batch
       collection = collection.to_s
       raise TypeError, "start must be DateTime" if start.class != DateTime
       raise TypeError, "to must be DateTime" if to.class != DateTime
-      raise TypeError.new "metrics must be MetricsType" if !(metrics.class < Metrics::MetricsType)
+      raise TypeError.new "metrics must be MetricsType" if !(metrics.class < Types::Metrics::MetricsType)
       raise TypeError.new "collection must be string convertable" if collection.class != String
 
-      query = FFI.query(@client, metrics.id, metrics.target, collection, start.rfc3339, to.rfc3339) do |t|
+      query = FFI.new_query(@client, metrics.id, metrics.target, collection, start.rfc3339, to.rfc3339) do |t|
         t.null?
       end
 
