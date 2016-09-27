@@ -7,7 +7,7 @@ module Keen::Batch
     end
 
     def self.from_redis(url, key, type)
-      raise TypeError.new "data type must be ResultType" if !(type < Result::ResultType)
+      raise TypeError.new "data type must be ResultType" if !(type < Types::Result::ResultType)
       result = FFI.from_redis(url.to_s, key.to_s, type.id)
       FFI.check(result) { |t| t.null? }
       Result.new(result)
@@ -15,7 +15,7 @@ module Keen::Batch
 
     def accumulate(type)
       raise "object abandoned" if @abandoned
-      raise TypeError.new "data type must be ResultType" if !(type < Result::ResultType)
+      raise TypeError.new "data type must be ResultType" if !(type < Types::Result::ResultType)
 
       result = FFI.accumulate(@result, type.id)
       @abandoned = true
@@ -28,7 +28,7 @@ module Keen::Batch
     def select(key, value, type)
       raise "object abandoned" if @abandoned
 
-      raise TypeError.new "data type must be ResultType" if !(type < Result::ResultType)
+      raise TypeError.new "data type must be ResultType" if !(type < Types::Result::ResultType)
       result = FFI.select(@result, key.to_s, value.to_s, type.id)
       @abandoned = true
       FFI.check(result) { |t| t.null? }
